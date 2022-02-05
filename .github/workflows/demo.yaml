@@ -1,0 +1,27 @@
+name: demo
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy-blog:
+    runs-on: ubuntu-latest
+    
+    env: 
+      DAY_OF_WEEK: Mon
+
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+          ref: master
+          path: source
+      
+      - name: Install HUGO
+        run: |
+          cd ~
+          wget https://github.com/gohugoio/hugo/releases/download/v0.83.1/hugo_extended_0.83.1_Linux-64bit.tar.gz
+          tar zxvf hugo_extended_0.83.1_Linux-64bit.tar.gz

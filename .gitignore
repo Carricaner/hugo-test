@@ -4,9 +4,11 @@
 # Ignore root directories
 /*/
 
+#Un-ignore .github directory
+!/.github/
+
 # Un-ignore .gitignore
 !.gitignore
 
 # Un-ignore the designated directory
-!/public/
-
+!/docs/
