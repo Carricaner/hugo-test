@@ -1,0 +1,12 @@
+# Ignore root files
+/*
+
+# Ignore root directories
+/*/
+
+# Un-ignore .gitignore
+!.gitignore
+
+# Un-ignore the designated directory
+!/public/
+
