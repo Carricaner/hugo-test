@@ -11,7 +11,7 @@ jobs:
 
     env:
       REPO_NAME: hugo-test
-      GITHUB_ACCOUNT: Carricaner
+      GITHUB_ACCOUNT: carricaner
 
     steps:
       - name: Checkout the repo
