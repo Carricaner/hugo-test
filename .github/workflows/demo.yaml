@@ -10,45 +10,48 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      GIT_GLOBAL_NAME: DarrenBlog
+      GIT_GLOBAL_EMAIL: carricanbuild@gmail.com
       REPO_NAME: hugo-test
       GITHUB_ACCOUNT: carricaner
+      BUILD_OUTPUT_DIR: docs
+      BLOG_SOURCE_DIR: source
+      BLOG_OUTPUT_DIR: blog
 
     steps:
-      - name: Checkout the repo
+      - name: Checkout
         uses: actions/checkout@v2
         with:
           submodules: true
           ref: master
-          path: source
+          path: ${{env.BLOG_SOURCE_DIR}}
       
-      - name: Install HUGO
-        run: |
-          cd ~
-          wget https://github.com/gohugoio/hugo/releases/download/v0.83.1/hugo_extended_0.83.1_Linux-64bit.tar.gz
-          tar zxvf hugo_extended_0.83.1_Linux-64bit.tar.gz
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: 'latest'
 
-      - name: Inspection
+      - name: Build Site
         env:
           test_secret: ${{secrets.NEW_TEXT_PAT}}
         run: |
-          cd /home/runner/work/${{env.REPO_NAME}}/${{env.REPO_NAME}}/source/
-          ls -la
-          echo "$test_secret"
+          cd /home/runner/work/${{env.REPO_NAME}}/${{env.REPO_NAME}}/${{env.BLOG_SOURCE_DIR}}/
+          hugo --minify
 
       - name: Checkout blog page content
         uses: actions/checkout@v2
         with:
           repository: ${{env.GITHUB_ACCOUNT}}/${{env.GITHUB_ACCOUNT}}.github.io
-          path: blog
+          path: ${{env.BLOG_OUTPUT_DIR}}
           token: ${{secrets.NEW_TEXT_PAT}}
 
       - name: Copy content and push
         run: |
-          cd /home/runner/work/${{env.REPO_NAME}}/${{env.REPO_NAME}}/blog/
-          git config --global user.email "carricanbuild@gmail.com"
-          git config --global user.name "DarrenBlog"
+          cd /home/runner/work/${{env.REPO_NAME}}/${{env.REPO_NAME}}/${{env.BLOG_OUTPUT_DIR}}/
+          git config --global user.name "${{env.GIT_GLOBAL_NAME}}"
+          git config --global user.email "${{env.GIT_GLOBAL_EMAIL}}"
           rm -rf ./*
-          cp -a /home/runner/work/${{env.REPO_NAME}}/${{env.REPO_NAME}}/source/docs/. .
+          cp -a /home/runner/work/${{env.REPO_NAME}}/${{env.REPO_NAME}}/${{env.BLOG_SOURCE_DIR}}/${{env.BUILD_OUTPUT_DIR}}/. .
           git add .
           git commit -m "Update blog"
           git push

@@ -1,14 +1,2 @@
-# Ignore root files
-/*
-
-# Ignore root directories
-/*/
-
-#Un-ignore .github directory
-!/.github/
-
-# Un-ignore .gitignore
-!.gitignore
-
-# Un-ignore the designated directory
-!/docs/
+# Ignore docs dir
+docs/
